@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Lab8
 {
-    internal class Class1
+    public abstract class Blue
     {
+        private string _input;
+        public string input => _input;
+        public Blue(string input){
+            _input = input;
+        }
     }
 }
