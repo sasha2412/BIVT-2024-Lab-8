@@ -13,5 +13,6 @@ namespace Lab8
         public Blue(string input){
             _input = input;
         }
+        public abstract void Review();
     }
 }
