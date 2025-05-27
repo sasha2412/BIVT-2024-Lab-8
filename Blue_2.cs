@@ -6,7 +6,7 @@ public class Blue_2 : Blue
     private string _output;
     private string _delete;
 
-    public string Output => _output;
+    public string Output{ get; private set; };
 
     public Blue_2(string input, string delete) : base(input)
     {
