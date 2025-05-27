@@ -1,12 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lab8
+namespace Lab_8{
+public class Blue_2 : Blue
 {
-    internal class Class3
+    private string _output;
+    private string _delete;
+
+    public string Output => _output;
+
+    public Blue_2(string input, string delete) : base(input)
     {
+        _delete = delete;
+        _output = null;
+    }
+
+    private static void ToDel(ref string[] strs, int ind)
+    {
+        if (strs == null || strs.Length == 0 || ind < 0 || ind >= strs.Length)
+            return;
+
+        if (strs[ind].Contains("\"") && !strs[ind].Contains('.') && !strs[ind].Contains(','))
+        {
+            strs[ind] = "\"\"";
+            return;
+        }
+        else if (strs[ind].Contains("\"") &&strs[ind].Contains('.'))
+        {
+            strs[ind] = "\"\".";
+            return;
+        }
+        else if (strs[ind].Contains("\"") &&strs[ind].Contains(','))
+        {
+            strs[ind] = "\"\",";
+            return;
+        }
+
+        string[] newStrs = new string[strs.Length-1];
+        Array.Copy(strs, newStrs, ind);
+        if (strs[ind].Contains('.') && ind != 0)
+            newStrs[ind-1] += ".";
+        else if (strs[ind].Contains(",") && ind != 0)
+            newStrs[ind-1] += ",";
+        Array.Copy(strs, ind+1, newStrs, ind, strs.Length-ind-1);
+        strs = newStrs;
+    }
+    public override void Review()
+    {
+        if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(_delete))
+        {
+            _output = null;
+            return;
+        }
+
+        _output = input;
+        if (!input.Contains(_delete))
+            return;
+
+        string[] strings = input.Split(" ");
+        for (int i = 0; i<strings.Length; i++)
+        {
+            if (strings[i].Contains(_delete))
+                ToDel(ref strings, i);
+        }
+        _output = string.Join(" ", strings);
+    }
+    public override string ToString()
+    {
+        if (string.IsNullOrEmpty(_output)){
+            return null;
+            }
+        return _output;
+    }
     }
 }
