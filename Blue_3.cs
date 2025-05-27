@@ -5,14 +5,14 @@ namespace Lab_8
 {
     public class Blue_3 : Blue
     {
-        private Tuple<char, double>[] _result;
+        private (char, double)[] _result;
 
         public Tuple<char, double>[] Output
         {
             get
             {
                 if (_result == null) return null;
-                var copy = new Tuple<char, double>[_result.Length];
+                var copy = new (char, double)[_result.Length];
                 Array.Copy(_result, copy, _result.Length);
                 return copy;
             }
