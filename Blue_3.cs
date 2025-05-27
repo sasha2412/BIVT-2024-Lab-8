@@ -7,7 +7,7 @@ namespace Lab_8
     {
         private (char, double)[] _result;
 
-        public Tuple<char, double>[] Output
+        public (char, double)[] Output
         {
             get
             {
@@ -76,18 +76,18 @@ namespace Lab_8
 
             if (totalWords == 0)
             {
-                _result = Array.Empty<Tuple<char, double>>();
+                _result = Array.Empty<(char, double)>();
                 return;
             }
 
-            var tempList = new System.Collections.Generic.List<Tuple<char, double>>();
+            var tempList = new System.Collections.Generic.List<(char, double)>();
             for (int i = 0; i < counts.Length; i++)
             {
                 if (counts[i] == 0) continue;
 
                 char letter = i < 26 ? (char)('a' + i) : (char)('а' + i - 26);
                 double percentage = Math.Round(counts[i] * 100.0 / totalWords, 4);
-                tempList.Add(Tuple.Create(letter, percentage));
+                tempList.Add((letter, percentage));
             }
 
             _result = tempList.ToArray();
