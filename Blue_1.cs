@@ -1,4 +1,4 @@
-﻿using Lab8;
+using Lab8;
 using System;
 using System.Linq;
 
