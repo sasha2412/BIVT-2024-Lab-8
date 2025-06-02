@@ -1,4 +1,4 @@
-﻿using Lab8;
+using Lab8;
 using System;
 
 namespace Lab_8
@@ -47,7 +47,7 @@ namespace Lab_8
 
         public override void Review()
         {
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrEmpty(input))
             {
                 _result = null;
                 return;
@@ -61,10 +61,16 @@ namespace Lab_8
 
             foreach (var part in wordParts)
             {
-                if (part.Length == 0) continue;
+                if (part.Length == 0)
+                {
+                    continue;
+                }
 
                 var firstChar = char.ToLower(part[0]);
-                if (!char.IsLetter(firstChar)) continue;
+                if (!char.IsLetter(firstChar))
+                {
+                    continue;
+                }
 
                 totalWords++;
 
@@ -83,11 +89,14 @@ namespace Lab_8
             var tempList = new System.Collections.Generic.List<(char, double)>();
             for (int i = 0; i < counts.Length; i++)
             {
-                if (counts[i] == 0) continue;
+                if (counts[i] == 0)
+                {
+                    continue;
+                }
 
                 char letter = i < 26 ? (char)('a' + i) : (char)('а' + i - 26);
                 double percentage = Math.Round(counts[i] * 100.0 / totalWords, 4);
-                tempList.Add((letter, percentage));
+                tempList.Add((letter, percentage));  
             }
 
             _result = tempList.ToArray();
