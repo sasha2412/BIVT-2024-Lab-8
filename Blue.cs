@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +10,11 @@ namespace Lab8
     {
         private string _input;
         public string input => _input;
-        public Blue(string input){
+        public Blue(string input)
+        {
             _input = input;
         }
+
         public abstract void Review();
     }
 }
