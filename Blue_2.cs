@@ -1,75 +1,77 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-namespace Lab_8{
-public class Blue_2 : Blue
+using System.Text;
+
+namespace Lab8
 {
-    private string _output;
-    private string _delete;
-
-    public string Output{ get; private set; };
-
-    public Blue_2(string input, string delete) : base(input)
+    public class Blue_2 : Blue
     {
-        _delete = delete;
-        _output = null;
-    }
+        private string _output;
+        private string _delete;
+        public string Output => _output;
 
-    private static void ToDel(ref string[] strs, int ind)
-    {
-        if (strs == null || strs.Length == 0 || ind < 0 || ind >= strs.Length)
-            return;
-
-        if (strs[ind].Contains("\"") && !strs[ind].Contains('.') && !strs[ind].Contains(','))
+        public Blue_2(string input, string delete) : base(input)
         {
-            strs[ind] = "\"\"";
-            return;
-        }
-        else if (strs[ind].Contains("\"") &&strs[ind].Contains('.'))
-        {
-            strs[ind] = "\"\".";
-            return;
-        }
-        else if (strs[ind].Contains("\"") &&strs[ind].Contains(','))
-        {
-            strs[ind] = "\"\",";
-            return;
-        }
-
-        string[] newStrs = new string[strs.Length-1];
-        Array.Copy(strs, newStrs, ind);
-        if (strs[ind].Contains('.') && ind != 0)
-            newStrs[ind-1] += ".";
-        else if (strs[ind].Contains(",") && ind != 0)
-            newStrs[ind-1] += ",";
-        Array.Copy(strs, ind+1, newStrs, ind, strs.Length-ind-1);
-        strs = newStrs;
-    }
-    public override void Review()
-    {
-        if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(_delete))
-        {
+            _delete = delete;
             _output = null;
-            return;
         }
-
-        _output = input;
-        if (!input.Contains(_delete))
-            return;
-
-        string[] strings = input.Split(" ");
-        for (int i = 0; i<strings.Length; i++)
+        private static void Delete(ref string[] strs, int ind)
         {
-            if (strings[i].Contains(_delete))
-                ToDel(ref strings, i);
-        }
-        _output = string.Join(" ", strings);
-    }
-    public override string ToString()
-    {
-        if (string.IsNullOrEmpty(_output)){
-            return null;
+            if (strs == null || strs.Length == 0 || ind < 0 || ind > strs.Length)
+            {
+                return;
             }
-        return _output;
-    }
+            if (strs[ind].Contains("\"") && !strs[ind].Contains('.') && !strs[ind].Contains(","))
+            {
+                strs[ind] = "\"\"";
+                return;
+            }
+            else if (strs[ind].Contains("\"") && strs[ind].Contains('.'))
+            {
+                strs[ind] = "\"\".";
+                return;
+            }
+            else if (strs[ind].Contains("\"") && strs[ind].Contains(','))
+            {
+                strs[ind] = "\"\",";
+                return;
+            }
+            string[] newStrs = new string[strs.Length - 1];
+            Array.Copy(strs, newStrs, ind);
+            if (strs[ind].Contains('.') && ind != 0)
+                newStrs[ind - 1] += ".";
+            else if (strs[ind].Contains(",") && ind != 0)
+                newStrs[ind - 1] += ",";
+            Array.Copy(strs, ind + 1, newStrs, ind, strs.Length - ind - 1);
+            strs = newStrs;
+
+        }
+        public override void Review()
+        {
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(_delete))
+            {
+                _output = null;
+                return;
+            }
+
+            _output = input;
+            if (!input.Contains(_delete))
+                return;
+
+            string[] strings = input.Split(' ');
+            for (int i = 0; i < strings.Length; i++)
+            {
+                if (strings[i].Contains(_delete))
+                    Delete(ref strings, i);
+            }
+            _output = string.Join(" ", strings);
+        }
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(_output))
+                return null;
+            return _output;
+        }
     }
 }
