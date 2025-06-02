@@ -1,47 +1,91 @@
+using Lab8;
 using System;
-using System.Globalization;
-using System.Linq;
 
-namespace Lab_8;
-
-public class Blue_4 : Blue
+namespace Lab_8
 {
-    private int _output;
-
-    public int Output => _output;
-
-    public Blue_4(string input) : base(input)
+    public class Blue_4 : Blue
     {
-        _output = 0;
-    }
+        private int _sumResult;
 
-    public override void Review()
-    {
-        if (string.IsNullOrEmpty(input))
-            return;
-        
-        bool wasDigit = false; int num = 0;
-        foreach (char symb in input)
+        public int Output => _sumResult;
+
+        public Blue_4(string input) : base(input)
         {
-            if (Char.IsDigit(symb) && !wasDigit)
+            _sumResult = 0;
+        }
+
+        private string ExtractNumberString(string source, ref int startPosition)
+        {
+            if (startPosition >= source.Length || startPosition < 0)
+                return null;
+            while (startPosition < source.Length && !char.IsDigit(source[startPosition]))
             {
-                num = (int)symb-48;
-                wasDigit = true;
+                startPosition++;
             }
-            else if (Char.IsDigit(symb) && wasDigit)
+
+            if (startPosition == source.Length)
+                return null;
+            string numberString = "";
+            if (startPosition > 0 && source[startPosition - 1] == '-')
+                numberString += "-";
+            else
+                numberString += "+";
+            while (startPosition < source.Length && char.IsDigit(source[startPosition]))
             {
-                num*=10; num += (int)symb-48;
+                numberString += source[startPosition];
+                startPosition++;
             }
-            else if (!Char.IsDigit(symb) && wasDigit)
+
+            return numberString;
+        }
+
+        private int ConvertToNumber(string numberString)
+        {
+            if (string.IsNullOrEmpty(numberString))
+            {  
+                return 0; 
+            }
+
+            bool isNegative = numberString[0] == '-';
+            int result = 0;
+
+            for (int i = 1; i < numberString.Length; i++)
             {
-                _output+=num;
-                num = 0;
-                wasDigit = false;
+                result = result * 10 + (numberString[i] - '0');
+            }
+
+            if (result < 0)
+            {
+                return -result;
+            }
+            else
+            {
+                return result;
             }
         }
-    }
-    public override string ToString()
-    {
-        return $"{_output}";
+
+        public override void Review()
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                _sumResult = 0;
+                return;
+            }
+
+            int currentPosition = 0;
+            while (currentPosition < input.Length)
+            {
+                string numberAsString = ExtractNumberString(input, ref currentPosition);
+                if (numberAsString == null)
+                    break;
+
+                _sumResult += ConvertToNumber(numberAsString);
+            }
+        }
+
+        public override string ToString()
+        {
+            return Output.ToString();
+        }
     }
 }
