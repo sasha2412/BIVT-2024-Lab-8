@@ -1,121 +1,111 @@
-using Lab8;
 using System;
 
 namespace Lab_8
 {
     public class Blue_3 : Blue
     {
-        private (char, double)[] _result;
-
-        public (char, double)[] Output
+        private (char, double)[] _output;
+        public (char, double)[] Output => _output;
+        public Blue_3(string input) : base(input)
         {
-            get
-            {
-                if (_result == null) return null;
-                var copy = new (char, double)[_result.Length];
-                Array.Copy(_result, copy, _result.Length);
-                return copy;
-            }
-        }
-
-        public Blue_3(string text) : base(text)
-        {
-            _result = null;
-        }
-
-        private void OrderResults()
-        {
-            if (_result == null || _result.Length < 2) return;
-
-            bool changed;
-            do
-            {
-                changed = false;
-                for (int i = 0; i < _result.Length - 1; i++)
-                {
-                    if (_result[i].Item2 < _result[i + 1].Item2 ||
-                        (_result[i].Item2 == _result[i + 1].Item2 && _result[i].Item1 > _result[i + 1].Item1))
-                    {
-                        var temp = _result[i];
-                        _result[i] = _result[i + 1];
-                        _result[i + 1] = temp;
-                        changed = true;
-                    }
-                }
-            } while (changed);
+            _output = null;
         }
 
         public override void Review()
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(Input))
             {
-                _result = null;
                 return;
             }
+            int cnt = 0;
+            string tmp = "";
+            char[] puncts = { ' ', '.', '!', '?', ',', ':', '\"', ';', '–', '(', ')', '[', ']', '{', '}', '/' };
 
-            var separators = new[] { ' ', '.', '!', '?', ',', ':', '"', ';', '–', '(', ')', '[', ']', '{', '}', '/' };
-            var wordParts = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-            int totalWords = 0;
-            var counts = new int[59]; 
-
-            foreach (var part in wordParts)
+            foreach (string word in Input.Split(puncts, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (part.Length == 0)
+                if (word.Length > 0 && char.IsLetter(word[0]))
                 {
-                    continue;
+                    tmp += char.ToLower(word[0]);
                 }
-
-                var firstChar = char.ToLower(part[0]);
-                if (!char.IsLetter(firstChar))
+            }
+            (char, double)[] lts = new (char, double)[tmp.Length];
+            for (int i = 0; i < lts.Length; i++)
+            {
+                lts[i] = ('\0', 0);
+            }
+            //Подсчёт частоты букв
+            foreach (char symb in tmp)
+            {
+                bool fl = false;
+                for (int i = 0; i < lts.Length; i++)
                 {
-                    continue;
+                    if (lts[i].Item1 == symb)
+                    {
+                        lts[i] = (symb, lts[i].Item2 + 1);
+                        fl = true;
+                        break;
+                    }
                 }
-
-                totalWords++;
-
-                if (firstChar >= 'a' && firstChar <= 'z')
-                    counts[firstChar - 'a']++;
-                else if (firstChar >= 'а' && firstChar <= 'я')
-                    counts[firstChar - 'а' + 26]++;
+                if (!fl) 
+                {
+                    for (int j = 0; j < lts.Length; j++)
+                    {
+                        if (lts[j].Item1 == '\0')
+                        {
+                            lts[j] = (symb, 1);
+                            cnt++;
+                            break;
+                        }
+                    }
+                }
+            }
+            int ind = 0;
+            var ans = new (char, double)[cnt];
+            foreach (var x in lts)
+            {
+                if (!(x.Item1 == '\0')) 
+                {
+                    double percent = x.Item2 / tmp.Length * 100;
+                    ans[ind] = (x.Item1, percent);
+                    ind++;
+                }
             }
 
-            if (totalWords == 0)
+            for (int i = 0; i < ans.Length - 1; i++)
             {
-                _result = Array.Empty<(char, double)>();
-                return;
-            }
-
-            var tempList = new System.Collections.Generic.List<(char, double)>();
-            for (int i = 0; i < counts.Length; i++)
-            {
-                if (counts[i] == 0)
+                for (int j = 0; j < ans.Length - i - 1; j++)
                 {
-                    continue;
-                }
+                    bool swap = false;
 
-                char letter = i < 26 ? (char)('a' + i) : (char)('а' + i - 26);
-                double percentage = Math.Round(counts[i] * 100.0 / totalWords, 4);
-                tempList.Add((letter, percentage));  
+                    if (ans[j].Item2 < ans[j + 1].Item2)
+                    {
+                        swap = true;
+                    }
+                    else if (ans[j].Item2 == ans[j + 1].Item2 &&
+                             ans[j].Item1 > ans[j + 1].Item1)
+                    {
+                        swap = true;
+                    }
+
+                    if (swap)
+                    {
+                        var temp = ans[j];
+                        ans[j] = ans[j + 1];
+                        ans[j + 1] = temp;
+                    }
+                }
             }
 
-            _result = tempList.ToArray();
-            OrderResults();
+            _output = ans;
         }
 
         public override string ToString()
         {
-            if (_result == null || _result.Length == 0)
-                return string.Empty;
-
-            var builder = new System.Text.StringBuilder();
-            for (int i = 0; i < _result.Length; i++)
+            if (_output == null)
             {
-                builder.Append($"{_result[i].Item1}-{_result[i].Item2:F4}");
-                if (i < _result.Length - 1)
-                    builder.AppendLine();
+                return null;
             }
-            return builder.ToString();
+            return string.Join(Environment.NewLine, Array.ConvertAll(_output, cortege => $"{cortege.Item1} - {cortege.Item2:F4}")); 
         }
     }
 }
