@@ -1,76 +1,64 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 
-namespace Lab8
+namespace Lab_8
 {
+
     public class Blue_2 : Blue
     {
+        private string _to_delete;
         private string _output;
-        private string _delete;
         public string Output => _output;
 
-        public Blue_2(string input, string delete) : base(input)
+        public Blue_2(string input, string to_delete) : base(input)
         {
-            _delete = delete;
+            _to_delete = to_delete;
             _output = null;
         }
-        private static void Delete(ref string[] strs, int ind)
-        {
-            if (strs == null || strs.Length == 0 || ind < 0 || ind > strs.Length)
-            {
-                return;
-            }
-            if (strs[ind].Contains("\"") && !strs[ind].Contains('.') && !strs[ind].Contains(","))
-            {
-                strs[ind] = "\"\"";
-                return;
-            }
-            else if (strs[ind].Contains("\"") && strs[ind].Contains('.'))
-            {
-                strs[ind] = "\"\".";
-                return;
-            }
-            else if (strs[ind].Contains("\"") && strs[ind].Contains(','))
-            {
-                strs[ind] = "\"\",";
-                return;
-            }
-            string[] newStrs = new string[strs.Length - 1];
-            Array.Copy(strs, newStrs, ind);
-            if (strs[ind].Contains('.') && ind != 0)
-                newStrs[ind - 1] += ".";
-            else if (strs[ind].Contains(",") && ind != 0)
-                newStrs[ind - 1] += ",";
-            Array.Copy(strs, ind + 1, newStrs, ind, strs.Length - ind - 1);
-            strs = newStrs;
 
-        }
         public override void Review()
         {
-            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(_delete))
+            if (string.IsNullOrEmpty(Input) || string.IsNullOrEmpty(_to_delete))
             {
                 _output = null;
                 return;
             }
-
-            _output = input;
-            if (!input.Contains(_delete))
-                return;
-
-            string[] strings = input.Split(' ');
-            for (int i = 0; i < strings.Length; i++)
+            string ans = "";
+            string[] words = Input.Split(' ');
+            _output = Input;
+            foreach (string word in words)
             {
-                if (strings[i].Contains(_delete))
-                    Delete(ref strings, i);
+                if (word.Contains(_to_delete))
+                {
+                    if (word.Contains(".") || word.Contains(",") || word.Contains(";"))
+                    {
+                        char[] smbls = word.ToCharArray();
+                        if (word.Contains("\""))
+                        {
+                            ans = _output.Replace(word + " ", "\"\"" + smbls[smbls.Length - 1] + " ");
+                        }
+                        else
+                        {
+                            ans = _output.Replace(" " + word, "" + smbls[smbls.Length - 1]);
+                        }
+                        _output = ans;
+                    }
+                    else
+                    {
+                        ans = _output.Replace(word + " ", "");
+                        _output = ans;
+                    }
+                }
             }
-            _output = string.Join(" ", strings);
+            _output = _output.Replace("  ", "");
+            _output = _output.Trim();
         }
+
         public override string ToString()
         {
             if (string.IsNullOrEmpty(_output))
-                return null;
+            {
+                return string.Empty;
+            }
             return _output;
         }
     }
