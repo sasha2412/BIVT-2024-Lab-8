@@ -1,91 +1,33 @@
-using Lab8;
 using System;
 
 namespace Lab_8
 {
     public class Blue_4 : Blue
     {
-        private int _sumResult;
-
-        public int Output => _sumResult;
-
+        private int _output;
+        public int Output => _output;
         public Blue_4(string input) : base(input)
         {
-            _sumResult = 0;
+            _output = 0;
         }
-
-        private string ExtractNumberString(string source, ref int startPosition)
-        {
-            if (startPosition >= source.Length || startPosition < 0)
-                return null;
-            while (startPosition < source.Length && !char.IsDigit(source[startPosition]))
-            {
-                startPosition++;
-            }
-
-            if (startPosition == source.Length)
-                return null;
-            string numberString = "";
-            if (startPosition > 0 && source[startPosition - 1] == '-')
-                numberString += "-";
-            else
-                numberString += "+";
-            while (startPosition < source.Length && char.IsDigit(source[startPosition]))
-            {
-                numberString += source[startPosition];
-                startPosition++;
-            }
-
-            return numberString;
-        }
-
-        private int ConvertToNumber(string numberString)
-        {
-            if (string.IsNullOrEmpty(numberString))
-            {  
-                return 0; 
-            }
-
-            bool isNegative = numberString[0] == '-';
-            int result = 0;
-
-            for (int i = 1; i < numberString.Length; i++)
-            {
-                result = result * 10 + (numberString[i] - '0');
-            }
-
-            if (result < 0)
-            {
-                return -result;
-            }
-            else
-            {
-                return result;
-            }
-        }
-
         public override void Review()
         {
-            if (string.IsNullOrWhiteSpace(input))
+            int n = 0;
+            foreach (char symb in Input)
             {
-                _sumResult = 0;
-                return;
+                if (char.IsDigit(symb))
+                {
+                    n = n * 10 + (symb - '0'); 
+                } else {
+                    _output += n;
+                    n = 0; 
+                }
             }
-
-            int currentPosition = 0;
-            while (currentPosition < input.Length)
-            {
-                string numberAsString = ExtractNumberString(input, ref currentPosition);
-                if (numberAsString == null)
-                    break;
-
-                _sumResult += ConvertToNumber(numberAsString);
-            }
+            _output += n;
         }
-
         public override string ToString()
         {
-            return Output.ToString();
+            return _output.ToString();
         }
     }
 }
